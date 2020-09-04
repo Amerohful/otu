@@ -1,0 +1,84 @@
+unit lab5main;
+//рисунок 14
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, TeEngine, Series, ExtCtrls, TeeProcs, Chart, ComCtrls;
+
+type
+  TForm1 = class(TForm)
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    Chart1: TChart;
+    Graphic2: TFastLineSeries;
+    Graphic3: TFastLineSeries;
+    Series1: TFastLineSeries;
+    procedure FormCreate(Sender: TObject);
+  private     { Private declarations }
+  public      { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+//////////////////////////////////////////////////
+///  ПРОЦЕДУРА МОДЕЛИРОВАНИЯ ПЕРЕХОДНЫХ ПРОЦЕССОВ
+//////////////////////////////////////////////////
+procedure TForm1.FormCreate(Sender: TObject);
+////////////////////////////////////////////
+   Const T1=25;T2=0.1;T3=0.01; k=75;
+         g=1.0;
+
+ Var   lin, dt, y,y1,y2,y3,x,z1,z2,z3,std,tau,ns:real;
+       i,j:integer;
+       mas:array[1..5000] of real;
+
+  begin
+     lin:=10;   dt:=0.0001;
+     z1:=0; z2:=0;z3:=0;
+     std:=0.0;
+
+     tau:=0.4426; {0.3; 0.54;} //важно для запаздывания
+     ns:=tau/dt;               //важно для запаздывания
+     i:=0;j:=0;                //важно для запаздывания
+
+      while std<lin do
+        begin
+          std:=std+dt;
+          x:=g-y;
+
+          y1:=z1;
+          z1:=z1+(-((1/T1)*y1-(k/T1)*x))*dt;
+          y2:=z2;
+          z2:=z2+(-((1/T2)*y2-(1/T2)*y1))*dt;
+          y3:=z3;
+          z3:=z3+(-((1/T3)*y3-(1/T3)*y2))*dt;
+          //Запаздывание
+          i:=i+1;
+          if(i>ns) then
+            begin
+               if(j>=ns) then j:=0;
+               j:=j+1;
+               y:=mas[j];
+               mas[j]:=y3;
+             end
+           else
+               begin
+                   mas[i]:=y3;
+                   y:=0;
+                end;
+  Series1.AddXY(std,y3);  //график без запаздывания
+  Graphic2.AddXY(std,g);  //входное воздействие
+  Graphic3.AddXY(std,y);  //график с учетом запаздывания
+          end;
+//КОНЕЦ МОДЕЛИРОВАНИЯ
+////////////////////////////////////////////
+
+end;
+
+end.
+
