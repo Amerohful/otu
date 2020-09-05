@@ -37,7 +37,7 @@ l=3; //интервал
 
 dt=0.00001; //шаг
 
-var y, y1, y2, z1, z2,c2, z3, x, t2, t3, std,
+var y, y1, y2, z1, z2,c2, z3, x, t2, t3, std, y_max, tp, tn,
 
 k, k1, k2, k3, k4,k10,k20,k30,f1,f2,g,krit: real;
 
@@ -45,7 +45,7 @@ begin
 
 krit:=0; y:=0; k:=0; k10:=3.25; k20:=3.5; k30:=1.3; f1:=0; f2:=0; c2:=sqrt(c3);
 
-t3:=0.1; z1:=0; z2:=0; z3:=0; std:=0;
+t3:=0.15; z1:=0; z2:=0; z3:=0; std:=0; y_max:=0; tp:=0; tn:=0;
 
 while std<=L do
 
@@ -93,6 +93,18 @@ z3:=z3+(k1+2*k2+2*k3+k4)/6;
 
 krit:=krit+x*x*dt;
 
+if y > y_max  then
+  y_max := y;
+
+if y >= 0.97 then if y <= 1.02 then if tn = 0 then
+  tn:=std;
+
+if y >= 0.95 then if y <= 1.05 then if tp = 0 then
+  tp:=std
+else
+  tp:=0;
+
+
 Series1.AddXY(std,y); //вывод графиков
 
 //Series2.AddXY(std,0.95);
@@ -109,7 +121,13 @@ std:=std+dt;
 
 end;
 
-statictext1.caption:=floattostr(krit);
+AllocConsole;
+writeln(Concat('y_max = ', floattostr(y_max)));
+writeln(Concat('tn = ', floattostr(tn)));
+writeln(Concat('tp = ', floattostr(tp)));
+Application.Run;
+
+statictext1.caption:=floattostr(y);
 
 end;
 
