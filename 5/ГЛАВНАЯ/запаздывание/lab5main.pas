@@ -30,7 +30,7 @@ implementation
 //////////////////////////////////////////////////
 procedure TForm1.FormCreate(Sender: TObject);
 ////////////////////////////////////////////
-   Const T=0.05; k=10;
+   Const T=0.2; k=2;
          g=1.0;
 
  Var   lin, dt, y,y1,y2,y3,x,z1,z2,z3,std,k1,k2,k3,k4,tau,ns:real;
@@ -42,7 +42,7 @@ procedure TForm1.FormCreate(Sender: TObject);
      z1:=0; z2:=0;z3:=0;
      std:=0.0;
 
-     tau:=0.12;{,0.125658; 0.15;} //важно для запаздывания
+     tau:=0.261941;{,0.125658; 0.15;} //важно для запаздывания
      ns:=tau/dt;               //важно для запаздывания
      i:=0;j:=0;                //важно для запаздывания
 
